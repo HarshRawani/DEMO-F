@@ -9,6 +9,7 @@
   --text-main: #e0e6f6;
   --text-muted: #a0aec0;
   --card-bg: #181f36;
+  --sidebar-bg: #141a2b;
   --border-radius: 16px;
   --shadow: 0 4px 32px rgba(0,0,0,0.4);
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
@@ -36,14 +37,14 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #141a2b;
+  --sidebar-foreground: #e0e6f6;
+  --sidebar-primary: #7f5af0;
+  --sidebar-primary-foreground: #e0e6f6;
+  --sidebar-accent: #2a3550;
+  --sidebar-accent-foreground: #e0e6f6;
+  --sidebar-border: #2a3550;
+  --sidebar-ring: #7f5af0;
 }
 
 body {
@@ -78,6 +79,125 @@ a:hover, button:hover {
 ::-webkit-scrollbar-thumb {
   background: #7f5af0;
   border-radius: 8px;
+}
+
+/* Sidebar specific styles */
+.sidebar {
+  background: #141a2b;
+  border-right: 1px solid #2a3550;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-collapsed {
+  width: 80px !important;
+}
+
+.sidebar-header {
+  background: #141a2b;
+  border-bottom: 1px solid #2a3550;
+}
+
+.sidebar-nav {
+  background: #141a2b;
+}
+
+.sidebar-nav-item {
+  color: #a0aec0;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav-item:hover {
+  color: #e0e6f6;
+  background: rgba(42, 53, 80, 0.5);
+}
+
+.sidebar-nav-item:hover .sidebar-icon {
+  color: #7f5af0;
+}
+
+.sidebar-text {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-collapsed .sidebar-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-collapsed .sidebar-logo-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-collapsed .sidebar-header {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* Tooltip for collapsed sidebar */
+.sidebar-tooltip {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2a3550;
+  color: #e0e6f6;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 50;
+  margin-left: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-collapsed .sidebar-nav-item:hover .sidebar-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sidebar-toggle {
+  background: transparent;
+  color: #a0aec0;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+  color: #e0e6f6;
+  background: rgba(42, 53, 80, 0.3);
+}
+
+/* Profile dropdown animations */
+.profile-dropdown-enter {
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+}
+
+.profile-dropdown-enter-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: all 0.2s ease-out;
+}
+
+.profile-dropdown-exit {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.profile-dropdown-exit-active {
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.15s ease-in;
 }
 
 @theme inline {
@@ -142,14 +262,14 @@ a:hover, button:hover {
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: #141a2b;
+  --sidebar-foreground: #e0e6f6;
+  --sidebar-primary: #7f5af0;
+  --sidebar-primary-foreground: #e0e6f6;
+  --sidebar-accent: #2a3550;
+  --sidebar-accent-foreground: #e0e6f6;
+  --sidebar-border: #2a3550;
+  --sidebar-ring: #7f5af0;
 }
 
 @layer base {

@@ -1,21 +1,50 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 
 function AppSideBar() {
-  return (
-    <SidebarProvider>
-      <div className="flex h-screen">
-        {/* Sidebar */}
-        <AppSidebar />
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-        {/* Main Content */}
-        <main className="flex-1 p-4">
-          <SidebarTrigger />
-          <h1 className="text-2xl font-bold">Welcome</h1>
-          <p className="text-gray-500">Your main content goes here.</p>
-        </main>
-      </div>
-    </SidebarProvider>
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
+  return (
+    <div
+      className="flex h-screen"
+      style={{
+        background:
+          "radial-gradient(circle at 60% 40%, #181f36 0%, #101624 100%)",
+      }}
+    >
+      {/* Custom Sidebar with collapse functionality */}
+      <AppSidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+
+      {/* Main Content */}
+      <main className="flex-1 p-6">
+        <div className="mb-4">
+          <button className="p-2 rounded-lg hover:bg-[#2a3550]/30 transition-colors">
+            <svg
+              className="w-6 h-6 text-[#e0e6f6]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div className="bg-[#141a2b]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#2a3550]/30 shadow-2xl">
+          <h1 className="text-3xl font-bold text-[#e0e6f6] mb-2">Welcome</h1>
+          <p className="text-[#a0aec0] text-lg">Your main content goes here.</p>
+        </div>
+      </main>
+    </div>
   );
 }
 
