@@ -1,0 +1,49 @@
+# Node modules
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Misc
+*.cache
+*.tmp
+
+# Coverage
+coverage/
+
+# Tailwind JIT cache
+.tailwind-cache/
+
+# npm debug files
+npm-debug.log*
+
+# Yarn
+.yarn/
+.yarnrc
+
+# Static export
+out/
+
+# Next.js
+.next/
+
+# React
+*.env.development.local
+*.env.test.local
+*.env.production.local
