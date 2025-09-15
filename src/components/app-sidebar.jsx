@@ -1,3 +1,4 @@
+// src/components/app-sidebar.jsx
 import { useState } from "react";
 import {
   MessageSquare,
@@ -50,7 +51,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
 
   return (
     <div
-      className={`h-screen flex flex-col relative transition-all duration-300 ease-in-out ${
+      className={`min-h-screen flex flex-col relative transition-all duration-300 ease-in-out ${
         isCollapsed ? "w-20" : "w-64"
       }`}
       style={{ backgroundColor: "#141a2b" }}
@@ -84,16 +85,25 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
 
       {/* Navigation Menu */}
       <nav className="flex-1 p-4 overflow-y-hidden scrollbar-hide">
-        <ul className="space-y-1">
+        <ul className="space-y-2">
           {items.map((item, index) => (
             <li key={item.title} className="relative group">
               <a
                 href={item.url}
                 className={`flex items-center rounded-lg transition-all duration-200 text-[#a0aec0] hover:text-[#e0e6f6] hover:bg-[#2a3550]/50 relative ${
-                  isCollapsed ? "justify-center p-2.5" : "gap-4 px-3 py-2.5"
+                  isCollapsed
+                    ? "justify-center w-12 h-12 mx-auto"
+                    : "gap-4 px-3 py-3 h-12"
                 }`}
               >
-                <item.icon className="h-5 w-5 transition-colors flex-shrink-0 hover:text-[#7f5af0]" />
+                {/* Fixed icon container with consistent sizing */}
+                <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                  <item.icon
+                    className="w-5 h-5 transition-colors hover:text-[#7f5af0]"
+                    strokeWidth={1.5}
+                  />
+                </div>
+
                 <span
                   className={`text-sm font-medium transition-all duration-300 ${
                     isCollapsed
@@ -144,7 +154,9 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
                 <div key={item.title}>
                   {item.title === "Email" ? (
                     <div className="px-4 py-3 flex items-center space-x-3 text-[#a0aec0] cursor-default">
-                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
+                        <item.icon className="w-4 h-4" strokeWidth={1.5} />
+                      </div>
                       <div>
                         <div className="text-xs text-[#7f7f7f]">
                           {item.title}
@@ -157,10 +169,15 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
                       href={item.url}
                       className="px-4 py-3 flex items-center space-x-3 text-[#a0aec0] hover:text-[#e0e6f6] hover:bg-[#3a4561] transition-colors"
                     >
-                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
+                        <item.icon className="w-4 h-4" strokeWidth={1.5} />
+                      </div>
                       <span className="text-sm">{item.title}</span>
                       {item.title === "Help" && (
-                        <ChevronRight className="w-4 h-4 ml-auto" />
+                        <ChevronRight
+                          className="w-4 h-4 ml-auto"
+                          strokeWidth={1.5}
+                        />
                       )}
                     </a>
                   )}

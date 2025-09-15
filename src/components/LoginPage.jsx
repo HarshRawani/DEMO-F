@@ -1,5 +1,5 @@
 import React from "react";
-import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 
 const LoginPage = ({
   loginForm,
@@ -8,6 +8,8 @@ const LoginPage = ({
   setShowPassword,
   handleLoginSubmit,
   setCurrentPage,
+  loading,
+  error,
 }) => (
   <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#181f36,_#101624)] flex items-center justify-center p-4">
     <div className="bg-[#141a2b] rounded-2xl shadow-2xl w-full max-w-md p-8 text-[#e0e6f6]">
@@ -15,6 +17,13 @@ const LoginPage = ({
         <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
         <p className="text-[#a0aec0]">Sign in to your account</p>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleLoginSubmit} className="space-y-6">
         {/* Email */}
@@ -83,10 +92,20 @@ const LoginPage = ({
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-[#7f5af0] to-[#5ddcff] text-white py-3 rounded-lg transition-all flex items-center justify-center space-x-2 group shadow-lg"
+          disabled={loading}
+          className="w-full bg-gradient-to-r from-[#7f5af0] to-[#5ddcff] text-white py-3 rounded-lg transition-all flex items-center justify-center space-x-2 group shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span>Sign In</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Signing In...</span>
+            </>
+          ) : (
+            <>
+              <span>Sign In</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </>
+          )}
         </button>
       </form>
 

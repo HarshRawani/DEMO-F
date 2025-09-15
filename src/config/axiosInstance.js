@@ -7,26 +7,10 @@ const axiosInstance = axios.create({
 
 // Add token to every request
 axiosInstance.interceptors.request.use((config) => {
-//   const publicEndpoints = [
-    //add public endpoints here, like register and login page
-//   ];
-  
-  if (publicEndpoints.some((ep) => config.url.includes(ep))) {
-    // Don't add token for public endpoints
-    return config;
-  }
-  
-  // Try to get token from both possible storage locations for backward compatibility
-  let token = localStorage.getItem("token");
-  if (!token) {
-    const authData = JSON.parse(localStorage.getItem("auth") || "{}");
-    token = authData.token;
-  }
-  
+  const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  
   return config;
 });
 

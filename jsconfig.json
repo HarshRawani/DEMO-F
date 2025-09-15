@@ -1,8 +1,9 @@
 {
-  "files": [],
-  "references": [
+  //below was causing error, change if required
+  // "files": [],
+  // "references": [
    
-  ],
+  // ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
