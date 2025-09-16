@@ -1,17 +1,10 @@
 // src/components/app-sidebar.jsx
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
-  MessageSquare,
-  BarChart3,
-  Clock,
-  Calendar,
-  Users,
-  Play,
-  Star,
-  AlertCircle,
   ChevronLeft,
   ChevronRight,
-  User,
   Mail,
   Bell,
   Palette,
@@ -19,31 +12,61 @@ import {
   HelpCircle,
   LogOut,
 } from "lucide-react";
-
-// Menu items matching the image
-const items = [
-  { title: "Saved chat", url: "#", icon: MessageSquare },
-  { title: "Dashboard", url: "#", icon: BarChart3 },
-  { title: "Recommendations", url: "#", icon: Clock },
-  { title: "Book Appointments", url: "#", icon: Calendar },
-  { title: "Peer Support", url: "#", icon: Users },
-  { title: "Videos & Audios", url: "#", icon: Play },
-  { title: "Mood Tracker / Journals", url: "#", icon: Star },
-  { title: "Crisis Support", url: "#", icon: AlertCircle },
-];
-
-// Profile dropdown menu items
-const profileMenuItems = [
-  { title: "Email", icon: Mail, value: "harsh@gmail.com" },
-  { title: "Notifications", url: "#", icon: Bell },
-  { title: "Customization", url: "#", icon: Palette },
-  { title: "Settings", url: "#", icon: Settings },
-  { title: "Help", url: "#", icon: HelpCircle },
-  { title: "Log out", url: "#", icon: LogOut },
-];
+import { SidebarMenu } from "./sidebar-menu";
+import { logoutUser } from "@/redux/loginSlice";
 
 export function AppSidebar({ isCollapsed = false, onToggle }) {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Determine user type and info from Redux state
+  const userType = user?.role || "student";
+  const userInfo = {
+    name: user?.name || "User",
+    email: user?.email || "user@example.com",
+    role: user?.role
+      ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+      : "User",
+  };
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap();
+      navigate("/");
+      setShowProfileDropdown(false);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Force logout even if API call fails
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      navigate("/");
+    }
+  };
+
+  const handleMenuItemClick = (action) => {
+    switch (action) {
+      case "logout":
+        handleLogout();
+        break;
+      case "help":
+        navigate("/help");
+        break;
+      case "settings":
+        navigate("/settings");
+        break;
+      case "notifications":
+        navigate("/notifications");
+        break;
+      case "customization":
+        navigate("/customization");
+        break;
+      default:
+        break;
+    }
+    setShowProfileDropdown(false);
+  };
 
   const toggleProfileDropdown = () => {
     setShowProfileDropdown(!showProfileDropdown);
@@ -83,48 +106,8 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
         </button>
       </div>
 
-      {/* Navigation Menu */}
-      <nav className="flex-1 p-4 overflow-y-hidden scrollbar-hide">
-        <ul className="space-y-2">
-          {items.map((item, index) => (
-            <li key={item.title} className="relative group">
-              <a
-                href={item.url}
-                className={`flex items-center rounded-lg transition-all duration-200 text-[#a0aec0] hover:text-[#e0e6f6] hover:bg-[#2a3550]/50 relative ${
-                  isCollapsed
-                    ? "justify-center w-12 h-12 mx-auto"
-                    : "gap-4 px-3 py-3 h-12"
-                }`}
-              >
-                {/* Fixed icon container with consistent sizing */}
-                <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                  <item.icon
-                    className="w-5 h-5 transition-colors hover:text-[#7f5af0]"
-                    strokeWidth={1.5}
-                  />
-                </div>
-
-                <span
-                  className={`text-sm font-medium transition-all duration-300 ${
-                    isCollapsed
-                      ? "opacity-0 w-0 overflow-hidden"
-                      : "opacity-100"
-                  }`}
-                >
-                  {item.title}
-                </span>
-
-                {/* Tooltip for collapsed state */}
-                {isCollapsed && (
-                  <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-3 px-3 py-2 bg-[#2a3550] text-[#e0e6f6] text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 shadow-lg">
-                    {item.title}
-                  </div>
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {/* Navigation Menu - Now using SidebarMenu component */}
+      <SidebarMenu userType={userType} isCollapsed={isCollapsed} />
 
       {/* Profile Section */}
       <div className="relative">
@@ -140,48 +123,58 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
             {/* Profile Header */}
             <div className="p-4 border-b border-[#3a4561] flex items-center space-x-3">
               <div className="w-12 h-12 bg-[#7f5af0] rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-semibold text-lg">H</span>
+                <span className="text-white font-semibold text-lg">
+                  {userInfo.name.charAt(0).toUpperCase()}
+                </span>
               </div>
               <div>
-                <div className="text-[#e0e6f6] font-semibold">Harsh Rawani</div>
-                <div className="text-[#a0aec0] text-sm">Admin</div>
+                <div className="text-[#e0e6f6] font-semibold">
+                  {userInfo.name}
+                </div>
+                <div className="text-[#a0aec0] text-sm">{userInfo.role}</div>
               </div>
             </div>
 
             {/* Menu Items */}
             <div className="py-2">
-              {profileMenuItems.map((item, index) => (
-                <div key={item.title}>
-                  {item.title === "Email" ? (
-                    <div className="px-4 py-3 flex items-center space-x-3 text-[#a0aec0] cursor-default">
-                      <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
-                        <item.icon className="w-4 h-4" strokeWidth={1.5} />
-                      </div>
-                      <div>
-                        <div className="text-xs text-[#7f7f7f]">
-                          {item.title}
-                        </div>
-                        <div className="text-sm">{item.value}</div>
-                      </div>
-                    </div>
-                  ) : (
-                    <a
-                      href={item.url}
-                      className="px-4 py-3 flex items-center space-x-3 text-[#a0aec0] hover:text-[#e0e6f6] hover:bg-[#3a4561] transition-colors"
-                    >
-                      <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
-                        <item.icon className="w-4 h-4" strokeWidth={1.5} />
-                      </div>
-                      <span className="text-sm">{item.title}</span>
-                      {item.title === "Help" && (
-                        <ChevronRight
-                          className="w-4 h-4 ml-auto"
-                          strokeWidth={1.5}
-                        />
-                      )}
-                    </a>
-                  )}
+              <div className="px-4 py-3 flex items-center space-x-3 text-[#a0aec0] cursor-default">
+                <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-4 h-4" strokeWidth={1.5} />
                 </div>
+                <div>
+                  <div className="text-xs text-[#7f7f7f]">Email</div>
+                  <div className="text-sm">{userInfo.email}</div>
+                </div>
+              </div>
+
+              {/* Other profile menu items */}
+              {[
+                { title: "Notifications", icon: Bell, action: "notifications" },
+                {
+                  title: "Customization",
+                  icon: Palette,
+                  action: "customization",
+                },
+                { title: "Settings", icon: Settings, action: "settings" },
+                { title: "Help", icon: HelpCircle, action: "help" },
+                { title: "Log out", icon: LogOut, action: "logout" },
+              ].map((item) => (
+                <button
+                  key={item.title}
+                  onClick={() => handleMenuItemClick(item.action)}
+                  className="w-full px-4 py-3 flex items-center space-x-3 text-[#a0aec0] hover:text-[#e0e6f6] hover:bg-[#3a4561] transition-colors text-left"
+                >
+                  <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-4 h-4" strokeWidth={1.5} />
+                  </div>
+                  <span className="text-sm">{item.title}</span>
+                  {item.title === "Help" && (
+                    <ChevronRight
+                      className="w-4 h-4 ml-auto"
+                      strokeWidth={1.5}
+                    />
+                  )}
+                </button>
               ))}
             </div>
           </div>
@@ -196,7 +189,9 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
             }`}
           >
             <div className="w-10 h-10 bg-[#7f5af0] rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-semibold">H</span>
+              <span className="text-white font-semibold">
+                {userInfo.name.charAt(0).toUpperCase()}
+              </span>
             </div>
             <div
               className={`text-left transition-all duration-300 ${
@@ -204,9 +199,9 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
               }`}
             >
               <div className="text-[#e0e6f6] font-medium text-sm">
-                Harsh Rawani
+                {userInfo.name}
               </div>
-              <div className="text-[#a0aec0] text-xs">Admin</div>
+              <div className="text-[#a0aec0] text-xs">{userInfo.role}</div>
             </div>
           </button>
         </div>

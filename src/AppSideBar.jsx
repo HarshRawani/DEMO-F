@@ -1,34 +1,14 @@
+// src/AppSideBar.jsx
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { AppSidebar } from "@/components/app-sidebar";
-import StudentDashboard from "./pages/student/StudentDashboard";
-import CounselorDashboard from "./pages/councelor/CouncelorDashboard";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-function AppSideBar() {
+
+function AppSideBar({ children }) {
+  // Accept children as prop
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const { user } = useSelector((state) => state.auth);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
-
-  // Render dashboard based on user role
-  const renderDashboard = () => {
-    switch (user?.role) {
-      case "student":
-        return <StudentDashboard />;
-      case "counselor":
-        return <CounselorDashboard />;
-      case "admin":
-        return <AdminDashboard />;
-      default:
-        return (
-          <div className="bg-[#141a2b]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#2a3550]/30 shadow-2xl">
-            <h1 className="text-3xl font-bold text-[#e0e6f6] mb-2">Welcome</h1>
-            <p className="text-[#a0aec0] text-lg">Please log in to access your dashboard.</p>
-          </div>
-        );
-    }
   };
 
   return (
@@ -64,10 +44,8 @@ function AppSideBar() {
           </svg>
         </button>
 
-        {/* Render Dashboard as Main Content */}
-        <div className="mt-16">
-          {renderDashboard()}
-        </div>
+        {/* Render children (dashboard content) */}
+        <div className="mt-16">{children}</div>
       </main>
     </div>
   );
