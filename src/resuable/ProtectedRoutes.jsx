@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchMe } from "../redux/loginSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { fetchMe } from "@/redux/loginSlice"; // adjust if different
 
-export default function ProtectedRoute({ children, allowedRole }) {
+export default function ProtectedRoute({ allowedRole }) {
   const dispatch = useDispatch();
   const location = useLocation();
-
   const { user } = useSelector((state) => state.auth || {});
   const [loading, setLoading] = useState(true);
 
@@ -16,26 +15,25 @@ export default function ProtectedRoute({ children, allowedRole }) {
       try {
         await dispatch(fetchMe()).unwrap();
       } catch (err) {
-        // user not logged in
+        // ignore
       } finally {
         if (mounted) setLoading(false);
       }
     })();
     return () => { mounted = false; };
-  }, [dispatch, location.pathname]);
+  }, [dispatch]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0f0f0f] text-white">
-        Checking session...
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
 
-  // if no user or role not allowed → redirect
-  if (!user || !allowedRole.includes(user.role)) {
+  // not logged in
+  if (!user) return <Navigate to="/auth/login" state={{ from: location }} replace />;
+
+  // role not allowed
+  if (allowedRole && !allowedRole.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  // authorized -> render nested routes
+  return <Outlet   
+  />;
 }

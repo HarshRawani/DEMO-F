@@ -22,25 +22,25 @@ import {
   PieChart,
   UserPlus,
   Settings,
+  GraduationCap, AlertTriangle, Megaphone, Handshake
 } from "lucide-react";
 
 // Define menu items for each user type
 const menuConfigs = {
   admin: [
     { title: "Dashboard", url: "/admin/dashboard", icon: BarChart3 },
-    { title: "User Management", url: "#", icon: UserPlus },
-    { title: "Analytics", url: "#", icon: TrendingUp },
-    { title: "Content Management", url: "#", icon: FileText },
-    { title: "Crisis Management", url: "#", icon: Shield },
-    { title: "Reports", url: "#", icon: PieChart },
-    { title: "System Settings", url: "#", icon: Settings },
-    { title: "Audit Logs", url: "#", icon: Archive },
+    { title: "Classroom Management", url: "/admin/classrooms", icon: GraduationCap },
+    { title: "Critical Alerts", url: "/admin/alerts", icon: AlertTriangle },
+    { title: "Wellness Tracking", url: "/admin/wellness", icon: Activity },
+    { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
+    { title: "Business & Collaboration", url: "/admin/collaboration", icon: Handshake },
+    { title: "Privacy & Security", url: "/admin/privacy", icon: Shield },
   ],
 
   student: [
     { title: "Dashboard", url: "/student/dashboard", icon: BarChart3 },
     { title: "Saved Chats", url: "#", icon: MessageSquare },
-    { title: "Book Appointments", url: "#", icon: Calendar },
+    {title: "Book Appointments",url: "/student/book-appointments",icon: Calendar,},
     { title: "Mood Tracker", url: "#", icon: Star },
     { title: "Journal", url: "#", icon: BookOpen },
     { title: "Videos & Resources", url: "#", icon: Play },

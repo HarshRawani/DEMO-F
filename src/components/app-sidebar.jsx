@@ -1,25 +1,83 @@
 // src/components/app-sidebar.jsx
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
+  BarChart3,
+  Users,
+  AlertTriangle,
+  Activity,
+  Megaphone,
+  Handshake,
+  GraduationCap,
+  Shield,
+  Settings,
   ChevronLeft,
   ChevronRight,
   Mail,
   Bell,
   Palette,
-  Settings,
   HelpCircle,
   LogOut,
+  MessageSquare,
+  BookOpen,
+  Calendar,
+  Heart,
+  Video,
+  Star,
+  UserCheck,
 } from "lucide-react";
 import { SidebarMenu } from "./sidebar-menu";
 import { logoutUser } from "@/redux/loginSlice";
 
+// Define menu items for each role
+const menuItems = {
+  admin: [
+    { title: "Dashboard", url: "/admin/dashboard", icon: BarChart3 },
+    { title: "Classroom Management", url: "/admin/classrooms", icon: GraduationCap },
+    { title: "Critical Alerts", url: "/admin/alerts", icon: AlertTriangle },
+    { title: "Wellness Tracking", url: "/admin/wellness", icon: Activity },
+    { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
+    { title: "Business & Collaboration", url: "/admin/collaboration", icon: Handshake },
+    { title: "Privacy & Security", url: "/admin/privacy", icon: Shield },
+  ],
+  student: [
+    { title: "Dashboard", url: "/student/dashboard", icon: BarChart3 },
+    { title: "Saved Chats", url: "/student/chats", icon: MessageSquare },
+    { title: "Recommendations", url: "/student/recommendations", icon: BookOpen },
+    { title: "Book Appointments", url: "/student/appointments", icon: Calendar },
+    { title: "Peer Support", url: "/student/peer-support", icon: UserCheck },
+    { title: "Videos & Audios", url: "/student/media", icon: Video },
+    { title: "Mood Tracker", url: "/student/mood", icon: Heart },
+    { title: "Crisis Support", url: "/student/crisis", icon: AlertTriangle },
+  ],
+  counselor: [
+    { title: "Dashboard", url: "/counselor/dashboard", icon: BarChart3 },
+    { title: "My Students", url: "/counselor/students", icon: Users },
+    { title: "Appointments", url: "/counselor/appointments", icon: Calendar },
+    { title: "Sessions", url: "/counselor/sessions", icon: Video },
+    { title: "Resources", url: "/counselor/resources", icon: BookOpen },
+    { title: "Analytics", url: "/counselor/analytics", icon: Activity },
+    { title: "Crisis Alerts", url: "/counselor/alerts", icon: AlertTriangle },
+  ],
+};
+
+// Profile dropdown menu items
+const profileMenuItems = [
+  { title: "Email", icon: Mail, value: "user@example.com" },
+  { title: "Notifications", url: "#", icon: Bell },
+  { title: "Customization", url: "#", icon: Palette },
+  { title: "Settings", url: "#", icon: Settings },
+  { title: "Help", url: "#", icon: HelpCircle },
+  { title: "Log out", url: "#", icon: LogOut },
+];
+
 export function AppSidebar({ isCollapsed = false, onToggle }) {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth || {});
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Determine user type and info from Redux state
   const userType = user?.role || "student";
@@ -72,6 +130,60 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
     setShowProfileDropdown(!showProfileDropdown);
   };
 
+  // Get menu items based on user role
+  const currentMenuItems = user?.role ? menuItems[user.role] || [] : [];
+
+  // Get app title based on user role
+  const getAppTitle = () => {
+    switch (user?.role) {
+      case "admin": return "Vybe Admin";
+      case "student": return "Vybe Student";
+      case "counselor": return "Vybe Counselor";
+      default: return "Vybe";
+    }
+  };
+
+  // Get user display info
+  const getUserInfo = () => {
+    switch (user?.role) {
+      case "admin": 
+        return { 
+          name: "Admin User", 
+          subtitle: "Organization Admin", 
+          avatar: "A",
+          email: user?.email || "admin@school.edu"
+        };
+      case "student": 
+        return { 
+          name: user?.name || "Student", 
+          subtitle: "Student", 
+          avatar: user?.name?.[0]?.toUpperCase() || "S",
+          email: user?.email || "student@school.edu"
+        };
+      case "counselor": 
+        return { 
+          name: user?.name || "Counselor", 
+          subtitle: "Counselor", 
+          avatar: user?.name?.[0]?.toUpperCase() || "C",
+          email: user?.email || "counselor@school.edu"
+        };
+      default: 
+        return { 
+          name: "User", 
+          subtitle: "Guest", 
+          avatar: "U",
+          email: "user@example.com"
+        };
+    }
+  };
+
+  // const userInfo = getUserInfo();
+
+  // Check if current route is active
+  const isActiveRoute = (url) => {
+    return location.pathname === url;
+  };
+
   return (
     <div
       className={`min-h-screen flex flex-col relative transition-all duration-300 ease-in-out ${
@@ -90,7 +202,7 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
               isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
             }`}
           >
-            Vybe
+            {getAppTitle()}
           </span>
         </div>
 
@@ -111,7 +223,6 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
 
       {/* Profile Section */}
       <div className="relative">
-        {/* Profile Dropdown */}
         {showProfileDropdown && (
           <div
             className={`absolute ${
@@ -120,7 +231,6 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
               isCollapsed ? "w-80" : "w-80"
             } bg-[#2a3550] rounded-xl shadow-2xl border border-[#3a4561] overflow-hidden z-50`}
           >
-            {/* Profile Header */}
             <div className="p-4 border-b border-[#3a4561] flex items-center space-x-3">
               <div className="w-12 h-12 bg-[#7f5af0] rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-semibold text-lg">
@@ -135,7 +245,6 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
               </div>
             </div>
 
-            {/* Menu Items */}
             <div className="py-2">
               <div className="px-4 py-3 flex items-center space-x-3 text-[#a0aec0] cursor-default">
                 <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
@@ -180,7 +289,6 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
           </div>
         )}
 
-        {/* Profile Button */}
         <div className="p-4 border-t border-[#2a3550]">
           <button
             onClick={toggleProfileDropdown}
@@ -207,7 +315,6 @@ export function AppSidebar({ isCollapsed = false, onToggle }) {
         </div>
       </div>
 
-      {/* Click outside to close dropdown */}
       {showProfileDropdown && (
         <div
           className="fixed inset-0 z-40"

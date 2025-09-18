@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthPages from "@/pages/AuthPages";
@@ -6,11 +5,32 @@ import AppSideBar from "@/AppSideBar";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import CounselorDashboard from "./pages/councelor/CouncelorDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import ClassroomManagement from "./pages/admin/ClassroomManagement";
+import StudentAnalytics from "./pages/admin/StudentAnalytics";
+import CriticalAlerts from "./pages/admin/CriticalAlerts";
+import WellnessTracking from "./pages/admin/WellnessTracking";
+import Announcements from "./pages/admin/Announcements";
+import PrivacySecurity from "./pages/admin/PrivacySecurity";
+import BusinessCollaboration from "./pages/admin/BuisnessCollaboration";
 import ProtectedRoute from "./resuable/ProtectedRoutes";
 import Settings from "./pages/Settings";
 import Notifications from "./pages/Notifications";
 import Customization from "./pages/Customization";
 import Help2 from "./pages/Help2";
+import BookAppointments from "./pages/student/BookAppointments";
+
+// -------- Layout Wrappers --------
+const StudentLayout = ({ children }) => (
+  <AppSideBar>{children}</AppSideBar>
+);
+
+const CounselorLayout = ({ children }) => (
+  <AppSideBar>{children}</AppSideBar>
+);
+
+const AdminLayout = ({ children }) => (
+  <AppSideBar>{children}</AppSideBar>
+);
 
 function AppRouter() {
   return (
@@ -32,6 +52,16 @@ function AppRouter() {
           <ProtectedRoute allowedRole={["student", "counselor", "admin"]}>
             <AppSideBar>
               <Help2 />
+            </AppSideBar>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/book-appointments"
+        element={
+          <ProtectedRoute allowedRole={["student"]}>
+            <AppSideBar>
+              <BookAppointments />
             </AppSideBar>
           </ProtectedRoute>
         }
@@ -59,38 +89,106 @@ function AppRouter() {
       {/* Public */}
       <Route path="/" element={<AuthPages />} />
       <Route path="/auth/*" element={<AuthPages />} />
-      {/* Protected dashboards */}
+
+      {/* Student Routes */}
       <Route
-        path="/student/dashboard"
-        element={
-          <ProtectedRoute allowedRole={["student"]}>
-            <AppSideBar>
+        element={<ProtectedRoute allowedRole={["student"]} />}
+      >
+        <Route
+          path="/student/dashboard"
+          element={
+            <StudentLayout>
               <StudentDashboard />
-            </AppSideBar>
-          </ProtectedRoute>
-        }
-      />
+            </StudentLayout>
+          }
+        />
+      </Route>
+
+      {/* Counselor Routes */}
       <Route
-        path="/counselor/dashboard"
-        element={
-          <ProtectedRoute allowedRole={["counselor"]}>
-            <AppSideBar>
+        element={<ProtectedRoute allowedRole={["counselor"]} />}
+      >
+        <Route
+          path="/counselor/dashboard"
+          element={
+            <CounselorLayout>
               <CounselorDashboard />
-            </AppSideBar>
-          </ProtectedRoute>
-        }
-      />
+            </CounselorLayout>
+          }
+        />
+      </Route>
+
+      {/* Admin Routes */}
       <Route
-        path="/admin/dashboard"
-        element={
-          <ProtectedRoute allowedRole={["admin"]}>
-            <AppSideBar>
+        element={<ProtectedRoute allowedRole={["admin"]} />}
+      >
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminLayout>
               <AdminDashboard />
-            </AppSideBar>
-          </ProtectedRoute>
-        }
-      />
-      {/* fallback */}
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/classrooms"
+          element={
+            <AdminLayout>
+              <ClassroomManagement />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/analytics"
+          element={
+            <AdminLayout>
+              <StudentAnalytics />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/alerts"
+          element={
+            <AdminLayout>
+              <CriticalAlerts />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/wellness"
+          element={
+            <AdminLayout>
+              <WellnessTracking />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/announcements"
+          element={
+            <AdminLayout>
+              <Announcements />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/collaboration"
+          element={
+            <AdminLayout>
+              <BusinessCollaboration />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/privacy"
+          element={
+            <AdminLayout>
+              <PrivacySecurity />
+            </AdminLayout>
+          }
+        />
+      </Route>
+
+      {/* Fallback */}
       <Route path="*" element={<AuthPages />} />
     </Routes>
   );
@@ -99,7 +197,9 @@ function AppRouter() {
 export default function App() {
   return (
     <Router>
+      <div className="bg-transparent min-h-screen"> {/* Ensure transparent bg */}
       <AppRouter />
+      </div>
     </Router>
   );
 }

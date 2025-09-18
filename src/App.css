@@ -2,6 +2,26 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #101624 !important; /* Dark background */
+  color: #e0e6f6;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Target the outer container that still shows white */
+#root > div, #__next > div, .app-container, .app-wrapper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove any white backgrounds in react-router outlets */
+.outlet, [data-rr-ui-event-source], [data-rr-ui-event-source] div {
+  background: transparent !important;
+}
 :root {
   --background-gradient: radial-gradient(circle at 60% 40%, #181f36 0%, #101624 100%);
   --primary-accent: #7f5af0;
@@ -291,3 +311,16 @@ a:hover, button:hover {
 .scrollbar-hide::-webkit-scrollbar { 
   display: none;  /* Safari and Chrome */
 }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: radial-gradient(circle at 60% 40%, #181f36 0%, #101624 100%);
+  color: #e0e6f6;
+}
+
+/* ensure pages that rely on full height expand */
+#__next, #root, .app-root {
+  min-height: 100%;
+}
+

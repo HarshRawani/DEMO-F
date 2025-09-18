@@ -2,9 +2,12 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { AppSidebar } from "@/components/app-sidebar";
+import StudentDashboard from "./pages/student/StudentDashboard";
+import CounselorDashboard from "./pages/councelor/CouncelorDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import { Outlet } from "react-router-dom";
 
 function AppSideBar({ children }) {
-  // Accept children as prop
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const toggleSidebar = () => {
@@ -12,40 +15,13 @@ function AppSideBar({ children }) {
   };
 
   return (
-    <div
-      className="flex min-h-screen"
-      style={{
-        background:
-          "radial-gradient(circle at 60% 40%, #181f36 0%, #101624 100%)",
-      }}
-    >
-      {/* Custom Sidebar with collapse functionality */}
-      <AppSidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-
-      {/* Main Content */}
-      <main className="flex-1 p-6 relative">
-        {/* Sidebar Toggle Button - Top Left */}
-        <button
-          onClick={toggleSidebar}
-          className="absolute top-6 left-6 p-2 rounded-lg hover:bg-[#2a3550]/30 transition-colors z-10"
-        >
-          <svg
-            className="w-6 h-6 text-[#e0e6f6]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
-
-        {/* Render children (dashboard content) */}
-        <div className="mt-16">{children}</div>
+    <div className="flex min-h-screen">
+      <AppSidebar isCollapsed={isSidebarCollapsed} onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
+      <main className="flex-1 p-0 relative bg-[#101624]">
+        <div className="bg-[#101624]">
+          {/* render passed children when present, otherwise render nested Outlet */}
+          {children ?? <Outlet />}
+        </div>
       </main>
     </div>
   );
